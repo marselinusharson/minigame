@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MHR Game</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+      }
+      .wrapper {
+        text-align: center;
+        width: 450px;
+        height: 100vh;
+        margin: auto;
+      }
+      .summary {
+        margin: 10px auto;
+        width: 300px;
+        height: 300px;
+        border: 3px solid rgb(30, 29, 29);
+        border-radius: 7px;
+        box-shadow: 1px 2px 3px rgba(30, 29, 29, 0.75);
+        box-sizing: border-box;
+      }
+      .games {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 2px 2px;
+        box-sizing: border-box;
+        margin: 5px auto;
+        width: 300px;
+        align-items: center;
+        justify-content: center;
+        justify-content: center;
+      }
+      .option {
+        background: #000;
+        border-radius: 7px;
+        margin: 0 3px;
+        font-size: 2.5rem;
+        transition: ease-in-out;
+      }
+      .option:hover {
+        cursor: pointer;
+        background-color: rgb(152, 145, 145);
+        padding: 2.5px 5.2px;
+        box-shadow: 2px -2px 2px rgba(0, 0, 0, 0.75), -2px 2px 2px rgba(0, 0, 0, 0.75);
+      }
+      .summary h1 {
+        letter-spacing: 0.75rem;
+      }
+      .summary p {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 5px 0;
+      }
+      .summary p span {
+        font-size: 1rem;
+      }
+      audio {
+        visibility: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="summary">
+        <h1>Match Result</h1>
+        <p id="showoption"></p>
+        <p id="showwinner"></p>
+      </div>
+      <div class="games">
+        <a onclick="pickOption('✌')" class="option">✌</a>
+        <a onclick="pickOption('✊')" class="option">✊</a>
+        <a onclick="pickOption('✋')" class="option">✋</a>
+      </div>
+      <audio id="winAudio" src="win.mp3"></audio>
+      <audio id="zonkAudio" src="zonk.mp3"></audio>
+      <audio id="clickAudio" src="clik.wav"></audio>
+      <audio id="seriAudio" src="seriSound.wav"></audio>
+    </div>
+
+    <script>
+      class Start {
+        constructor() {
+          this.playerName = "You";
+          this.botName = "Bot";
+          this.botOption;
+          this.playerOption;
+        }
+        get winner() {
+          if (this.playerOption == "✋" && this.botOption == "✊") {
+            return this.playerName;
+          } else if (this.playerOption == "✋" && this.botOption == "✌") {
+            return this.botName;
+          } else if (this.playerOption == "✌" && this.botOption == "✋") {
+            return this.playerName;
+          } else if (this.playerOption == "✌" && this.botOption == "✊") {
+            return this.botName;
+          } else if (this.playerOption == "✊" && this.botOption == "✌") {
+            return this.playerName;
+          } else if (this.playerOption == "✊" && this.botOption == "✋") {
+            return this.botName;
+          } else {
+            return " tidak ada / Seri";
+          }
+        }
+      }
+
+      const games = new Start();
+      function pickOption(option) {
+        const clickAudio = document.getElementById("clickAudio");
+        const seriAudio = document.getElementById("seriAudio");
+        clickAudio.play();
+        games.playerOption = option;
+        games.botOption = botBrain();
+        const showoption = document.getElementById("showoption");
+        const showWinner = document.getElementById("showwinner");
+        const winSound = document.getElementById("winAudio");
+        const zonkSound = document.getElementById("zonkAudio");
+        showoption.innerHTML = `<span>You</span> ${games.playerOption} VS ${games.botOption} <span>Bot</span>`;
+        showWinner.innerHTML = `Winner is: <br>${games.winner}`;
+        if (games.winner == games.playerName) {
+          winSound.play();
+        } else if (games.winner == games.botName) {
+          zonkSound.play();
+        } else {
+          seriAudio.play();
+        }
+      }
+
+      function botBrain() {
+        const data = ["✌", "✊", "✋"];
+        const generate = data[Math.floor(Math.random() * data.length)];
+        return generate;
+      }
+    </script>
+  </body>
+</html>
